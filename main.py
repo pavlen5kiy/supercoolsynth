@@ -1,17 +1,19 @@
 import numpy as np
 import sounddevice as sd
 
-# Parameters
-frequency = 440  # A4 note
-duration = 2.0   # seconds
-sample_rate = 44100  # samples per second
+from midi import *
 
-# Generate time array
-t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+SAMPLE_RATE = 44100
 
-# Generate sine wave
-sine_wave = 0.5 * np.sin(2 * np.pi * frequency * t)
+bpm = 120
+length = 1 / 4
+duration = 1 / (bpm / 60) * 4 * length
 
-# Play sound
-sd.play(sine_wave, samplerate=sample_rate)
-sd.wait()  # Wait until the sound has finished playing
+
+for note in get_notes():
+
+    t = np.linspace(0, duration, int(SAMPLE_RATE * duration), endpoint=False)
+    sine_wave = 0.5 * np.sin(2 * np.pi * note * 5 * t)
+
+    sd.play(sine_wave, samplerate=SAMPLE_RATE)
+    sd.wait()
